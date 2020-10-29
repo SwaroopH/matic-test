@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useMemo } from "react";
+import { Web3ReactProvider, useWeb3React } from "@web3-react/core";
+import { NetworkConnector } from "@web3-react/network-connector";
+import { Web3Provider } from "@ethersproject/providers";
+import GetNonce from "./GetNonce";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function getLibrary(provider) {
+  const library = new Web3Provider(provider);
+  library.pollingInterval = 12000;
+  return library;
 }
 
-export default App;
+const ExampleApp = () => {
+  const {
+    activate,
+    active,
+    // connector,
+    // library,
+    // chainId,
+    // account,
+    // deactivate,
+    // error,
+  } = useWeb3React();
+
+  useMemo(() => {
+    console.log("Activating");
+    activate(
+      new NetworkConnector({
+        urls: {
+          80001: "https://ztjv2.csb.app",
+        },
+        defaultChainId: 80001,
+        pollingInterval: 8000,
+      }),
+      () => console.log("it is connected to matic!"),
+      true
+    );
+  }, []);
+
+  return active ? <GetNonce /> : <>Loading provider</>;
+};
+
+export default () => (
+  <Web3ReactProvider getLibrary={getLibrary}>
+    <ExampleApp />
+  </Web3ReactProvider>
+);
