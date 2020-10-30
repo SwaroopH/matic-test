@@ -27,7 +27,7 @@ const ExampleApp = () => {
     activate(
       new NetworkConnector({
         urls: {
-          80001: "https://ztjv2.csb.app",
+          80001: "https://rpc-mumbai.maticvigil.com/",
         },
         defaultChainId: 80001,
         pollingInterval: 8000,
